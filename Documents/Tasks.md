@@ -9,17 +9,17 @@
 
 ### Project Setup
 - [x] Initialize Node.js/Express project with TypeScript (`tsconfig.json`, `ts-node-dev`)
-- [ ] Set up folder structure: `src/routes`, `src/controllers`, `src/middleware`, `src/lib`
-- [ ] Configure ESLint + Prettier with a shared config
-- [ ] Set up environment variables with `dotenv` (`.env.example` with all required keys)
-- [ ] Add a basic health-check endpoint `GET /api/health`
+- [x] Set up folder structure: `src/routes`, `src/controllers`, `src/middleware`, `src/lib`
+- [x] Configure ESLint + Prettier with a shared config
+- [x] Set up environment variables with `dotenv` (`.env.example` with all required keys)
+- [x] Add a basic health-check endpoint `GET /api/health`
 
 ### Database
-- [ ] Install and configure Prisma with a PostgreSQL connection
-- [ ] Write the Prisma schema for all models: `User`, `Symptom`, `SymptomLog`, `MoodLog`, `Medication`, `MedicationLog`, `Habit`, `HabitLog`
-- [ ] Add database indexes on `(user_id, logged_at)` for all log tables
+- [x] Install and configure Prisma with a PostgreSQL connection
+- [x] Write the Prisma schema for all models: `User`, `Symptom`, `SymptomLog`, `MoodLog`, `Medication`, `MedicationLog`, `Habit`, `HabitLog`
+- [x] Add database indexes on `(user_id, logged_at)` for all log tables
 - [ ] Run initial migration (`prisma migrate dev`)
-- [ ] Write a seed script that inserts default symptoms (Headache, Fatigue, Joint Pain, etc.) and default habits (Sleep Duration, Water Intake, Exercise, Alcohol, Caffeine)
+- [x] Write a seed script that inserts default symptoms (Headache, Fatigue, Joint Pain, etc.) and default habits (Sleep Duration, Water Intake, Exercise, Alcohol, Caffeine)
 
 ### Authentication
 - [ ] Implement `POST /api/auth/register` — hash password with bcrypt, return JWT + refresh token
