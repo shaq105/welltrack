@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum SymptomCategory {
+  pain
+  neurological
+  digestive
+  respiratory
+  cardiovascular
+  mental
+  other
+}
+
+enum TrackingType {
+  boolean
+  numeric
+  duration
+}
+
+// ─── Models ──────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  displayName  String
+  timezone     String   @default("UTC")
+  createdAt    DateTime @default(now())
+
+  symptoms       Symptom[]
+  symptomLogs    SymptomLog[]
+  moodLogs       MoodLog[]
+  medications    Medication[]
+  medicationLogs MedicationLog[]
+  habits         Habit[]
+  habitLogs      HabitLog[]
+}
+
+model Symptom {
+  id       String          @id @default(uuid())
+  userId   String?
+  name     String
+  category SymptomCategory @default(other)
+  isActive Boolean         @default(true)
+
+  user        User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symptomLogs SymptomLog[]
+}
+
+model SymptomLog {
+  id         String   @id @default(uuid())
+  userId     String
+  symptomId  String
+  severity   Int
+  notes      String?
+  loggedAt   DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symptom Symptom @relation(fields: [symptomId], references: [id], onDelete: Cascade)
+
+  @@index([userId, loggedAt])
+}
+
+model MoodLog {
+  id           String   @id @default(uuid())
+  userId       String
+  moodScore    Int
+  energyLevel  Int?
+  stressLevel  Int?
+  notes        String?
+  loggedAt     DateTime @default(now())
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, loggedAt])
+}
+
+model Medication {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  dosage    String?
+  frequency String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  medicationLogs MedicationLog[]
+}
+
+model MedicationLog {
+  id           String    @id @default(uuid())
+  userId       String
+  medicationId String
+  taken        Boolean
+  takenAt      DateTime?
+  notes        String?
+  loggedAt     DateTime  @default(now())
+  createdAt    DateTime  @default(now())
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  medication Medication @relation(fields: [medicationId], references: [id], onDelete: Cascade)
+
+  @@index([userId, loggedAt])
+}
+
+model Habit {
+  id           String       @id @default(uuid())
+  userId       String?
+  name         String
+  trackingType TrackingType
+  unit         String?
+  isActive     Boolean      @default(true)
+
+  user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  habitLogs HabitLog[]
+}
+
+model HabitLog {
+  id            String   @id @default(uuid())
+  userId        String
+  habitId       String
+  valueBoolean  Boolean?
+  valueNumeric  Float?
+  valueDuration Int?
+  notes         String?
+  loggedAt      DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  habit Habit @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  @@index([userId, loggedAt])
+}
