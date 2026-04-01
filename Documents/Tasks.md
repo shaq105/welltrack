@@ -22,13 +22,13 @@
 - [x] Write a seed script that inserts default symptoms (Headache, Fatigue, Joint Pain, etc.) and default habits (Sleep Duration, Water Intake, Exercise, Alcohol, Caffeine)
 
 ### Authentication
-- [ ] Implement `POST /api/auth/register` — hash password with bcrypt, return JWT + refresh token
-- [ ] Implement `POST /api/auth/login` — validate credentials, return JWT + refresh token
-- [ ] Implement `POST /api/auth/refresh` — validate refresh token, return new JWT
-- [ ] Implement `POST /api/auth/logout` — invalidate refresh token
-- [ ] Implement `POST /api/auth/forgot-password` — generate reset token, send email (use Nodemailer or a transactional email service)
-- [ ] Implement `POST /api/auth/reset-password` — validate token, update password hash
-- [ ] Write `authenticate` middleware that verifies JWT and attaches `req.user`
+- [x] Implement `POST /api/auth/register` — hash password with bcrypt, return JWT + refresh token
+- [x] Implement `POST /api/auth/login` — validate credentials, return JWT + refresh token
+- [x] Implement `POST /api/auth/refresh` — validate refresh token, return new JWT
+- [x] Implement `POST /api/auth/logout` — invalidate refresh token
+- [x] Implement `POST /api/auth/forgot-password` — generate reset token, send email (use Nodemailer or a transactional email service)
+- [x] Implement `POST /api/auth/reset-password` — validate token, update password hash
+- [x] Write `authenticate` middleware that verifies JWT and attaches `req.user`
 
 ### User Endpoints
 - [ ] Implement `GET /api/users/me` — return profile (id, email, display_name, timezone)
