@@ -1,6 +1,8 @@
 import express from 'express';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
+import symptomRoutes from './routes/symptom.routes';
+import symptomLogRoutes from './routes/symptomLog.routes';
 
 const app = express();
 
@@ -12,5 +14,7 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/symptoms', symptomRoutes);
+app.use('/api/symptom-logs', symptomLogRoutes);
 
 export default app;

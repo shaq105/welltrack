@@ -36,14 +36,14 @@
 - [x] Implement `DELETE /api/users/me` — delete user and all related data (cascade)
 
 ### Symptoms & Symptom Logs
-- [ ] Implement `GET /api/symptoms` — return system defaults + user's custom symptoms
-- [ ] Implement `POST /api/symptoms` — create a custom symptom for the current user
-- [ ] Implement `PATCH /api/symptoms/:id` — update name/category/is_active (own symptoms only)
-- [ ] Implement `DELETE /api/symptoms/:id` — delete a custom symptom (own symptoms only)
-- [ ] Implement `GET /api/symptom-logs` — filtered by `startDate`, `endDate`, `limit`, `offset`
-- [ ] Implement `POST /api/symptom-logs` — validate severity is 1–10
-- [ ] Implement `PATCH /api/symptom-logs/:id` — update severity/notes/logged_at (own logs only)
-- [ ] Implement `DELETE /api/symptom-logs/:id` — delete own log entry
+- [x] Implement `GET /api/symptoms` — return system defaults + user's custom symptoms
+- [x] Implement `POST /api/symptoms` — create a custom symptom for the current user
+- [x] Implement `PATCH /api/symptoms/:id` — update name/category/is_active (own symptoms only)
+- [x] Implement `DELETE /api/symptoms/:id` — delete a custom symptom (own symptoms only)
+- [x] Implement `GET /api/symptom-logs` — filtered by `startDate`, `endDate`, `limit`, `offset`
+- [x] Implement `POST /api/symptom-logs` — validate severity is 1–10
+- [x] Implement `PATCH /api/symptom-logs/:id` — update severity/notes/logged_at (own logs only)
+- [x] Implement `DELETE /api/symptom-logs/:id` — delete own log entry
 
 ### Mood Logs
 - [ ] Implement `GET /api/mood-logs` — filtered by `startDate`, `endDate`
