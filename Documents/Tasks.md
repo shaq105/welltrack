@@ -31,9 +31,9 @@
 - [x] Write `authenticate` middleware that verifies JWT and attaches `req.user`
 
 ### User Endpoints
-- [ ] Implement `GET /api/users/me` — return profile (id, email, display_name, timezone)
-- [ ] Implement `PATCH /api/users/me` — update display_name and/or timezone
-- [ ] Implement `DELETE /api/users/me` — delete user and all related data (cascade)
+- [x] Implement `GET /api/users/me` — return profile (id, email, display_name, timezone)
+- [x] Implement `PATCH /api/users/me` — update display_name and/or timezone
+- [x] Implement `DELETE /api/users/me` — delete user and all related data (cascade)
 
 ### Symptoms & Symptom Logs
 - [ ] Implement `GET /api/symptoms` — return system defaults + user's custom symptoms
