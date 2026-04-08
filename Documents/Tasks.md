@@ -57,10 +57,10 @@
 - [x] Implement `PATCH /api/medication-logs/:id` and `DELETE /api/medication-logs/:id`
 
 ### Habits & Habit Logs
-- [ ] Implement full CRUD for `GET/POST/PATCH/DELETE /api/habits`
-- [ ] Implement `GET /api/habit-logs` — filtered by `startDate`, `endDate`
-- [ ] Implement `POST /api/habit-logs` — store correct value field based on tracking_type (boolean/numeric/duration)
-- [ ] Implement `PATCH /api/habit-logs/:id` and `DELETE /api/habit-logs/:id`
+- [x] Implement full CRUD for `GET/POST/PATCH/DELETE /api/habits`
+- [x] Implement `GET /api/habit-logs` — filtered by `startDate`, `endDate`
+- [x] Implement `POST /api/habit-logs` — store correct value field based on tracking_type (boolean/numeric/duration)
+- [x] Implement `PATCH /api/habit-logs/:id` and `DELETE /api/habit-logs/:id`
 
 ### Validation & Error Handling
 - [ ] Add a global error-handling middleware that returns consistent `{ error, message }` JSON responses
