@@ -51,10 +51,10 @@
 - [x] Implement `PATCH /api/mood-logs/:id` and `DELETE /api/mood-logs/:id`
 
 ### Medications & Medication Logs
-- [ ] Implement full CRUD for `GET/POST/PATCH/DELETE /api/medications`
-- [ ] Implement `GET /api/medication-logs` — filtered by `startDate`, `endDate`
-- [ ] Implement `POST /api/medication-logs` — log taken/not-taken with optional `taken_at`
-- [ ] Implement `PATCH /api/medication-logs/:id` and `DELETE /api/medication-logs/:id`
+- [x] Implement full CRUD for `GET/POST/PATCH/DELETE /api/medications`
+- [x] Implement `GET /api/medication-logs` — filtered by `startDate`, `endDate`
+- [x] Implement `POST /api/medication-logs` — log taken/not-taken with optional `taken_at`
+- [x] Implement `PATCH /api/medication-logs/:id` and `DELETE /api/medication-logs/:id`
 
 ### Habits & Habit Logs
 - [ ] Implement full CRUD for `GET/POST/PATCH/DELETE /api/habits`
