@@ -46,9 +46,9 @@
 - [x] Implement `DELETE /api/symptom-logs/:id` — delete own log entry
 
 ### Mood Logs
-- [ ] Implement `GET /api/mood-logs` — filtered by `startDate`, `endDate`
-- [ ] Implement `POST /api/mood-logs` — validate mood_score (1–5), energy_level (1–5), stress_level (1–5)
-- [ ] Implement `PATCH /api/mood-logs/:id` and `DELETE /api/mood-logs/:id`
+- [x] Implement `GET /api/mood-logs` — filtered by `startDate`, `endDate`
+- [x] Implement `POST /api/mood-logs` — validate mood_score (1–5), energy_level (1–5), stress_level (1–5)
+- [x] Implement `PATCH /api/mood-logs/:id` and `DELETE /api/mood-logs/:id`
 
 ### Medications & Medication Logs
 - [ ] Implement full CRUD for `GET/POST/PATCH/DELETE /api/medications`

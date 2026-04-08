@@ -3,6 +3,7 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import symptomRoutes from './routes/symptom.routes';
 import symptomLogRoutes from './routes/symptomLog.routes';
+import moodLogRoutes from './routes/moodLog.routes';
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/symptoms', symptomRoutes);
 app.use('/api/symptom-logs', symptomLogRoutes);
+app.use('/api/mood-logs', moodLogRoutes);
 
 export default app;
