@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -26,7 +27,9 @@ export default function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <DashboardPage />
+                <Layout>
+                  <DashboardPage />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -34,7 +37,9 @@ export default function App() {
             path="/history"
             element={
               <ProtectedRoute>
-                <HistoryPage />
+                <Layout>
+                  <HistoryPage />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -42,7 +47,9 @@ export default function App() {
             path="/trends"
             element={
               <ProtectedRoute>
-                <TrendsPage />
+                <Layout>
+                  <TrendsPage />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -50,7 +57,9 @@ export default function App() {
             path="/settings"
             element={
               <ProtectedRoute>
-                <SettingsPage />
+                <Layout>
+                  <SettingsPage />
+                </Layout>
               </ProtectedRoute>
             }
           />
