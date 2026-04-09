@@ -86,9 +86,9 @@
 - [x] Implement auth state management (React Context or Zustand) to store user info and tokens
 
 ### Dashboard
-- [ ] Build the Dashboard layout: today's date, logged-today summary, quick-add buttons
-- [ ] Add a "days logged this week" or streak indicator
-- [ ] Wire up quick-add buttons to open the correct log modal
+- [x] Build the Dashboard layout: today's date, logged-today summary, quick-add buttons
+- [x] Add a "days logged this week" or streak indicator
+- [x] Wire up quick-add buttons to open the correct log modal
 
 ### Log Entry Forms
 - [ ] Build Symptom log modal: symptom selector, severity slider (1–10), notes, date picker
