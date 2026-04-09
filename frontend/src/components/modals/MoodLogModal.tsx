@@ -1,19 +1,13 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import apiClient from '../../lib/apiClient';
+import type { MoodLog } from '../../types/api';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  initialData?: MoodLog;
 }
-
-const SCORE_LABELS: Record<number, string> = {
-  1: 'Very Low',
-  2: 'Low',
-  3: 'Moderate',
-  4: 'High',
-  5: 'Very High',
-};
 
 const MOOD_LABELS: Record<number, string> = {
   1: 'Very Bad',
@@ -23,28 +17,55 @@ const MOOD_LABELS: Record<number, string> = {
   5: 'Great',
 };
 
-function ScoreSelector({
+const SCORE_LABELS: Record<number, string> = {
+  1: 'Very Low',
+  2: 'Low',
+  3: 'Moderate',
+  4: 'High',
+  5: 'Very High',
+};
+
+function toDatetimeLocal(isoString: string): string {
+  const d = new Date(isoString);
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+}
+
+function nowDatetimeLocal(): string {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+}
+
+function ScoreRow({
   label,
   value,
   onChange,
-  labels = SCORE_LABELS,
+  labels,
+  optional,
 }: {
   label: string;
-  value: number;
-  onChange: (v: number) => void;
-  labels?: Record<number, string>;
+  value: number | null;
+  onChange: (v: number | null) => void;
+  labels: Record<number, string>;
+  optional?: boolean;
 }) {
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-sage-700">
-        {label}: <span className="font-bold text-teal-700">{labels[value]}</span>
+        {label}{' '}
+        {optional && <span className="font-normal text-sage-500">(optional)</span>}
+        {value !== null && (
+          <>
+            {': '}
+            <span className="font-bold text-teal-700">{labels[value]}</span>
+          </>
+        )}
       </label>
       <div className="flex gap-2">
         {[1, 2, 3, 4, 5].map((n) => (
           <button
             key={n}
             type="button"
-            onClick={() => onChange(n)}
+            onClick={() => onChange(optional && value === n ? null : n)}
             className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${
               value === n
                 ? 'bg-teal-600 text-white'
@@ -59,21 +80,37 @@ function ScoreSelector({
   );
 }
 
-export default function MoodLogModal({ isOpen, onClose, onSuccess }: Props) {
+export default function MoodLogModal({ isOpen, onClose, onSuccess, initialData }: Props) {
+  const isEditing = !!initialData;
+
   const [moodScore, setMoodScore] = useState(3);
   const [energyLevel, setEnergyLevel] = useState<number | null>(null);
   const [stressLevel, setStressLevel] = useState<number | null>(null);
   const [notes, setNotes] = useState('');
-  const [loggedAt, setLoggedAt] = useState(() => new Date().toISOString().slice(0, 16));
+  const [loggedAt, setLoggedAt] = useState(nowDatetimeLocal);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    if (initialData) {
+      setMoodScore(initialData.moodScore);
+      setEnergyLevel(initialData.energyLevel);
+      setStressLevel(initialData.stressLevel);
+      setNotes(initialData.notes ?? '');
+      setLoggedAt(toDatetimeLocal(initialData.loggedAt));
+    } else {
+      setMoodScore(3);
+      setEnergyLevel(null);
+      setStressLevel(null);
+      setNotes('');
+      setLoggedAt(nowDatetimeLocal());
+    }
+    setError('');
+  }, [isOpen, initialData]);
+
   const handleClose = () => {
     setError('');
-    setNotes('');
-    setMoodScore(3);
-    setEnergyLevel(null);
-    setStressLevel(null);
     onClose();
   };
 
@@ -82,13 +119,23 @@ export default function MoodLogModal({ isOpen, onClose, onSuccess }: Props) {
     setError('');
     setIsSubmitting(true);
     try {
-      await apiClient.post('/api/mood-logs', {
-        moodScore,
-        energyLevel: energyLevel ?? undefined,
-        stressLevel: stressLevel ?? undefined,
-        notes: notes.trim() || undefined,
-        loggedAt: new Date(loggedAt).toISOString(),
-      });
+      if (isEditing) {
+        await apiClient.patch(`/api/mood-logs/${initialData.id}`, {
+          moodScore,
+          energyLevel,
+          stressLevel,
+          notes: notes.trim() || undefined,
+          loggedAt: new Date(loggedAt).toISOString(),
+        });
+      } else {
+        await apiClient.post('/api/mood-logs', {
+          moodScore,
+          energyLevel: energyLevel ?? undefined,
+          stressLevel: stressLevel ?? undefined,
+          notes: notes.trim() || undefined,
+          loggedAt: new Date(loggedAt).toISOString(),
+        });
+      }
       handleClose();
       onSuccess();
     } catch (err: unknown) {
@@ -104,60 +151,18 @@ export default function MoodLogModal({ isOpen, onClose, onSuccess }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
-        <h2 className="mb-4 text-xl font-bold text-teal-800">Log Mood</h2>
+        <h2 className="mb-4 text-xl font-bold text-teal-800">
+          {isEditing ? 'Edit Mood Log' : 'Log Mood'}
+        </h2>
 
         {error && (
           <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <ScoreSelector label="Mood" value={moodScore} onChange={setMoodScore} labels={MOOD_LABELS} />
-
-          <div>
-            <label className="mb-1 block text-sm font-medium text-sage-700">
-              Energy Level{' '}
-              <span className="font-normal text-sage-500">(optional)</span>
-            </label>
-            <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setEnergyLevel(energyLevel === n ? null : n)}
-                  className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${
-                    energyLevel === n
-                      ? 'bg-teal-600 text-white'
-                      : 'border border-sage-300 text-sage-700 hover:bg-sage-100'
-                  }`}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1 block text-sm font-medium text-sage-700">
-              Stress Level{' '}
-              <span className="font-normal text-sage-500">(optional)</span>
-            </label>
-            <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setStressLevel(stressLevel === n ? null : n)}
-                  className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${
-                    stressLevel === n
-                      ? 'bg-teal-600 text-white'
-                      : 'border border-sage-300 text-sage-700 hover:bg-sage-100'
-                  }`}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-          </div>
+          <ScoreRow label="Mood" value={moodScore} onChange={(v) => v !== null && setMoodScore(v)} labels={MOOD_LABELS} />
+          <ScoreRow label="Energy Level" value={energyLevel} onChange={setEnergyLevel} labels={SCORE_LABELS} optional />
+          <ScoreRow label="Stress Level" value={stressLevel} onChange={setStressLevel} labels={SCORE_LABELS} optional />
 
           <div>
             <label className="mb-1 block text-sm font-medium text-sage-700">Date & Time</label>
@@ -193,7 +198,7 @@ export default function MoodLogModal({ isOpen, onClose, onSuccess }: Props) {
               disabled={isSubmitting}
               className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:opacity-60"
             >
-              {isSubmitting ? 'Saving…' : 'Save'}
+              {isSubmitting ? 'Saving…' : isEditing ? 'Update' : 'Save'}
             </button>
           </div>
         </form>
