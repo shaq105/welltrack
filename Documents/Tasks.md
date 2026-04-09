@@ -72,10 +72,10 @@
 ## Phase 2: Frontend Foundation (Weeks 4–6)
 
 ### Project Setup
-- [ ] Initialize React + TypeScript app with Vite
-- [ ] Install and configure Tailwind CSS (soft color theme: teal, sage)
-- [ ] Set up React Router with route definitions for all screens
-- [ ] Create an API client (Axios instance) with base URL from env, and interceptors that attach the JWT and handle 401 token refresh
+- [x] Initialize React + TypeScript app with Vite
+- [x] Install and configure Tailwind CSS (soft color theme: teal, sage)
+- [x] Set up React Router with route definitions for all screens
+- [x] Create an API client (Axios instance) with base URL from env, and interceptors that attach the JWT and handle 401 token refresh
 
 ### Auth Pages & Flow
 - [ ] Build Register page (email, password, display name fields + form validation)
