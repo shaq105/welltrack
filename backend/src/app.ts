@@ -8,6 +8,7 @@ import medicationRoutes from './routes/medication.routes';
 import medicationLogRoutes from './routes/medicationLog.routes';
 import habitRoutes from './routes/habit.routes';
 import habitLogRoutes from './routes/habitLog.routes';
+import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
 
@@ -26,5 +27,7 @@ app.use('/api/medications', medicationRoutes);
 app.use('/api/medication-logs', medicationLogRoutes);
 app.use('/api/habits', habitRoutes);
 app.use('/api/habit-logs', habitLogRoutes);
+
+app.use(errorHandler);
 
 export default app;
