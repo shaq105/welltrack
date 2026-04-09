@@ -102,9 +102,9 @@
 ## Phase 3: Full Features (Weeks 7–9)
 
 ### History View
-- [ ] Build History page: fetch logs across all types, group and display by day
-- [ ] Add type filter tabs (All / Symptoms / Mood / Medications / Habits)
-- [ ] Make entries expandable/tappable to open the edit modal
+- [x] Build History page: fetch logs across all types, group and display by day
+- [x] Add type filter tabs (All / Symptoms / Mood / Medications / Habits)
+- [x] Make entries expandable/tappable to open the edit modal
 
 ### Trends & Charts
 - [ ] Install Recharts (or similar) and build a reusable `LineChart` component
