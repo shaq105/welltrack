@@ -63,9 +63,9 @@
 - [x] Implement `PATCH /api/habit-logs/:id` and `DELETE /api/habit-logs/:id`
 
 ### Validation & Error Handling
-- [ ] Add a global error-handling middleware that returns consistent `{ error, message }` JSON responses
-- [ ] Add input validation using Zod (or express-validator) on all POST/PATCH routes
-- [ ] Return 403 if a user tries to modify another user's data
+- [x] Add a global error-handling middleware that returns consistent `{ error, message }` JSON responses
+- [x] Add input validation using Zod (or express-validator) on all POST/PATCH routes
+- [x] Return 403 if a user tries to modify another user's data
 
 ---
 
