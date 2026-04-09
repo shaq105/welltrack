@@ -1,14 +1,27 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import apiClient from '../../lib/apiClient';
-import type { Habit } from '../../types/api';
+import type { Habit, HabitLog } from '../../types/api';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  initialData?: HabitLog;
 }
 
-export default function HabitLogModal({ isOpen, onClose, onSuccess }: Props) {
+function toDatetimeLocal(isoString: string): string {
+  const d = new Date(isoString);
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+}
+
+function nowDatetimeLocal(): string {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+}
+
+export default function HabitLogModal({ isOpen, onClose, onSuccess, initialData }: Props) {
+  const isEditing = !!initialData;
+
   const [habits, setHabits] = useState<Habit[]>([]);
   const [habitId, setHabitId] = useState('');
   const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
@@ -16,12 +29,13 @@ export default function HabitLogModal({ isOpen, onClose, onSuccess }: Props) {
   const [valueNumeric, setValueNumeric] = useState('');
   const [valueDuration, setValueDuration] = useState('');
   const [notes, setNotes] = useState('');
-  const [loggedAt, setLoggedAt] = useState(() => new Date().toISOString().slice(0, 16));
+  const [loggedAt, setLoggedAt] = useState(nowDatetimeLocal);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Load habits list for create mode
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || isEditing) return;
     apiClient
       .get<{ habits: Habit[] }>('/api/habits')
       .then(({ data }) => {
@@ -33,34 +47,60 @@ export default function HabitLogModal({ isOpen, onClose, onSuccess }: Props) {
         }
       })
       .catch(() => setError('Failed to load habits.'));
-  }, [isOpen]);
+  }, [isOpen, isEditing]);
+
+  // Reset form state when modal opens or initialData changes
+  useEffect(() => {
+    if (!isOpen) return;
+    if (initialData) {
+      setNotes(initialData.notes ?? '');
+      setLoggedAt(toDatetimeLocal(initialData.loggedAt));
+      if (initialData.valueBoolean !== null) setValueBoolean(initialData.valueBoolean);
+      setValueNumeric(initialData.valueNumeric !== null ? String(initialData.valueNumeric) : '');
+      setValueDuration(initialData.valueDuration !== null ? String(initialData.valueDuration) : '');
+      // Reconstruct selectedHabit from the included relation
+      if (initialData.habit) {
+        setSelectedHabit({
+          id: initialData.habitId,
+          userId: null,
+          name: initialData.habit.name,
+          trackingType: initialData.habit.trackingType,
+          unit: initialData.habit.unit,
+          isActive: true,
+        });
+      }
+    } else {
+      setNotes('');
+      setLoggedAt(nowDatetimeLocal());
+      setValueBoolean(true);
+      setValueNumeric('');
+      setValueDuration('');
+    }
+    setError('');
+  }, [isOpen, initialData]);
 
   const handleHabitChange = (id: string) => {
     setHabitId(id);
-    setSelectedHabit(habits.find((h) => h.id === id) ?? null);
+    const habit = habits.find((h) => h.id === id) ?? null;
+    setSelectedHabit(habit);
+    setValueBoolean(true);
     setValueNumeric('');
     setValueDuration('');
-    setValueBoolean(true);
   };
 
   const handleClose = () => {
     setError('');
-    setNotes('');
-    setValueBoolean(true);
-    setValueNumeric('');
-    setValueDuration('');
     onClose();
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!habitId || !selectedHabit) {
+    if (!selectedHabit) {
       setError('Please select a habit.');
       return;
     }
 
     const payload: Record<string, unknown> = {
-      habitId,
       notes: notes.trim() || undefined,
       loggedAt: new Date(loggedAt).toISOString(),
     };
@@ -86,7 +126,11 @@ export default function HabitLogModal({ isOpen, onClose, onSuccess }: Props) {
     setError('');
     setIsSubmitting(true);
     try {
-      await apiClient.post('/api/habit-logs', payload);
+      if (isEditing) {
+        await apiClient.patch(`/api/habit-logs/${initialData.id}`, payload);
+      } else {
+        await apiClient.post('/api/habit-logs', { habitId, ...payload });
+      }
       handleClose();
       onSuccess();
     } catch (err: unknown) {
@@ -102,27 +146,38 @@ export default function HabitLogModal({ isOpen, onClose, onSuccess }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
-        <h2 className="mb-4 text-xl font-bold text-teal-800">Log Habit</h2>
+        <h2 className="mb-4 text-xl font-bold text-teal-800">
+          {isEditing ? 'Edit Habit Log' : 'Log Habit'}
+        </h2>
 
         {error && (
           <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="mb-1 block text-sm font-medium text-sage-700">Habit</label>
-            <select
-              value={habitId}
-              onChange={(e) => handleHabitChange(e.target.value)}
-              className="w-full rounded-lg border border-sage-300 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200"
-            >
-              {habits.map((h) => (
-                <option key={h.id} value={h.id}>
-                  {h.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          {isEditing ? (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-sage-700">Habit</label>
+              <p className="rounded-lg border border-sage-200 bg-sage-50 px-3 py-2 text-sm text-sage-800">
+                {selectedHabit?.name ?? 'Unknown habit'}
+              </p>
+            </div>
+          ) : (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-sage-700">Habit</label>
+              <select
+                value={habitId}
+                onChange={(e) => handleHabitChange(e.target.value)}
+                className="w-full rounded-lg border border-sage-300 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200"
+              >
+                {habits.map((h) => (
+                  <option key={h.id} value={h.id}>
+                    {h.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {selectedHabit?.trackingType === 'boolean' && (
             <div>
@@ -172,7 +227,9 @@ export default function HabitLogModal({ isOpen, onClose, onSuccess }: Props) {
 
           {selectedHabit?.trackingType === 'duration' && (
             <div>
-              <label className="mb-1 block text-sm font-medium text-sage-700">Duration (minutes)</label>
+              <label className="mb-1 block text-sm font-medium text-sage-700">
+                Duration (minutes)
+              </label>
               <input
                 type="number"
                 min="0"
@@ -219,7 +276,7 @@ export default function HabitLogModal({ isOpen, onClose, onSuccess }: Props) {
               disabled={isSubmitting}
               className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:opacity-60"
             >
-              {isSubmitting ? 'Saving…' : 'Save'}
+              {isSubmitting ? 'Saving…' : isEditing ? 'Update' : 'Save'}
             </button>
           </div>
         </form>

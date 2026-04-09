@@ -91,11 +91,11 @@
 - [x] Wire up quick-add buttons to open the correct log modal
 
 ### Log Entry Forms
-- [ ] Build Symptom log modal: symptom selector, severity slider (1–10), notes, date picker
-- [ ] Build Mood log modal: mood score (1–5), optional energy/stress levels, notes, date picker
-- [ ] Build Medication log modal: medication selector, taken toggle, optional taken_at time
-- [ ] Build Habit log modal: habit selector, value input (adapts to tracking_type), notes, date picker
-- [ ] All modals should support both "create" and "edit" modes
+- [x] Build Symptom log modal: symptom selector, severity slider (1–10), notes, date picker
+- [x] Build Mood log modal: mood score (1–5), optional energy/stress levels, notes, date picker
+- [x] Build Medication log modal: medication selector, taken toggle, optional taken_at time
+- [x] Build Habit log modal: habit selector, value input (adapts to tracking_type), notes, date picker
+- [x] All modals should support both "create" and "edit" modes
 
 ---
 
