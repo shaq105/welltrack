@@ -78,12 +78,12 @@
 - [x] Create an API client (Axios instance) with base URL from env, and interceptors that attach the JWT and handle 401 token refresh
 
 ### Auth Pages & Flow
-- [ ] Build Register page (email, password, display name fields + form validation)
-- [ ] Build Login page
-- [ ] Build Forgot Password page (email input, success message)
-- [ ] Build Reset Password page (new password + confirm, reads token from URL)
-- [ ] Create a `ProtectedRoute` component that redirects unauthenticated users to `/login`
-- [ ] Implement auth state management (React Context or Zustand) to store user info and tokens
+- [x] Build Register page (email, password, display name fields + form validation)
+- [x] Build Login page
+- [x] Build Forgot Password page (email input, success message)
+- [x] Build Reset Password page (new password + confirm, reads token from URL)
+- [x] Create a `ProtectedRoute` component that redirects unauthenticated users to `/login`
+- [x] Implement auth state management (React Context or Zustand) to store user info and tokens
 
 ### Dashboard
 - [ ] Build the Dashboard layout: today's date, logged-today summary, quick-add buttons
