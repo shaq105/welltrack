@@ -107,11 +107,11 @@
 - [x] Make entries expandable/tappable to open the edit modal
 
 ### Trends & Charts
-- [ ] Install Recharts (or similar) and build a reusable `LineChart` component
-- [ ] Build Trends page with 7 / 30 / 90 day range picker
-- [ ] Add symptom severity trend chart (one line per symptom)
-- [ ] Add mood / energy / stress trend chart
-- [ ] Build a calendar heatmap showing days with logged entries
+- [x] Install Recharts (or similar) and build a reusable `LineChart` component
+- [x] Build Trends page with 7 / 30 / 90 day range picker
+- [x] Add symptom severity trend chart (one line per symptom)
+- [x] Add mood / energy / stress trend chart
+- [x] Build a calendar heatmap showing days with logged entries
 
 ### Settings & Customization
 - [ ] Build Settings page with sections for Profile, Symptoms, Habits, Medications, Data, Account
