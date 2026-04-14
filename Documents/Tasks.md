@@ -114,12 +114,12 @@
 - [x] Build a calendar heatmap showing days with logged entries
 
 ### Settings & Customization
-- [ ] Build Settings page with sections for Profile, Symptoms, Habits, Medications, Data, Account
-- [ ] Profile section: edit display name and timezone, save via `PATCH /api/users/me`
-- [ ] Symptoms section: toggle visibility of system symptoms, add custom symptoms, delete custom ones
-- [ ] Habits section: toggle visibility of system habits, add custom habits, delete custom ones
-- [ ] Medications section: add, edit, deactivate, and delete medications
-- [ ] Account section: logout button, delete account button (with confirmation dialog)
+- [x] Build Settings page with sections for Profile, Symptoms, Habits, Medications, Data, Account
+- [x] Profile section: edit display name and timezone, save via `PATCH /api/users/me`
+- [x] Symptoms section: toggle visibility of system symptoms, add custom symptoms, delete custom ones
+- [x] Habits section: toggle visibility of system habits, add custom habits, delete custom ones
+- [x] Medications section: add, edit, deactivate, and delete medications
+- [x] Account section: logout button, delete account button (with confirmation dialog)
 
 ### Data Export
 - [ ] Implement `GET /api/export/csv` backend endpoint — query all user logs within date range and format as CSV
