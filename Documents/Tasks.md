@@ -122,8 +122,8 @@
 - [x] Account section: logout button, delete account button (with confirmation dialog)
 
 ### Data Export
-- [ ] Implement `GET /api/export/csv` backend endpoint — query all user logs within date range and format as CSV
-- [ ] Add export button in Settings that calls the endpoint and triggers a browser file download
+- [x] Implement `GET /api/export/csv` backend endpoint — query all user logs within date range and format as CSV
+- [x] Add export button in Settings that calls the endpoint and triggers a browser file download
 
 ---
 
