@@ -6,6 +6,7 @@ import SymptomLogModal from '../components/modals/SymptomLogModal';
 import MoodLogModal from '../components/modals/MoodLogModal';
 import MedicationLogModal from '../components/modals/MedicationLogModal';
 import HabitLogModal from '../components/modals/HabitLogModal';
+import OnboardingModal from '../components/OnboardingModal';
 
 type ModalType = 'symptom' | 'mood' | 'medication' | 'habit' | null;
 
@@ -50,7 +51,7 @@ interface TodaySummary {
 }
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, isNewUser, dismissNewUser } = useAuth();
   const [todaySummary, setTodaySummary] = useState<TodaySummary>({
     symptoms: 0,
     mood: false,
@@ -313,6 +314,11 @@ export default function DashboardPage() {
         onClose={() => setActiveModal(null)}
         onSuccess={loadDashboardData}
       />
+
+      {/* Onboarding for new users */}
+      {isNewUser && user && (
+        <OnboardingModal displayName={user.display_name || user.email} onComplete={dismissNewUser} />
+      )}
     </>
   );
 }

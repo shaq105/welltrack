@@ -155,7 +155,7 @@
 
 ## Nice-to-Haves (If Time Permits)
 
-- [ ] Daily reminder emails (cron job + Nodemailer)
-- [ ] Correlation insights (e.g., "You sleep worse on days you have caffeine")
-- [ ] PDF export formatted for doctor visits
-- [ ] Onboarding flow for new users (step-by-step intro modal)
+- [x] Daily reminder emails (cron job + Nodemailer)
+- [x] Correlation insights (e.g., "You sleep worse on days you have caffeine")
+- [x] PDF export formatted for doctor visits
+- [x] Onboarding flow for new users (step-by-step intro modal)

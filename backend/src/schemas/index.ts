@@ -51,10 +51,20 @@ export const updateMeSchema = z
   .object({
     displayName: z.string().optional(),
     timezone: z.string().optional(),
+    reminderEnabled: z.boolean().optional(),
+    reminderTime: z
+      .string()
+      .regex(/^\d{2}:\d{2}$/, 'reminderTime must be in HH:MM format')
+      .optional(),
   })
-  .refine((data) => data.displayName !== undefined || data.timezone !== undefined, {
-    message: 'At least one of displayName or timezone is required',
-  });
+  .refine(
+    (data) =>
+      data.displayName !== undefined ||
+      data.timezone !== undefined ||
+      data.reminderEnabled !== undefined ||
+      data.reminderTime !== undefined,
+    { message: 'At least one field is required' },
+  );
 
 // ── Symptoms ────────────────────────────────────────────────────────────────
 

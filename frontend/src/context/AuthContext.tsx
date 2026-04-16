@@ -11,6 +11,8 @@ interface User {
 interface AuthContextValue {
   user: User | null;
   isLoading: boolean;
+  isNewUser: boolean;
+  dismissNewUser: () => void;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, displayName: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -21,6 +23,9 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isNewUser, setIsNewUser] = useState(false);
+
+  const dismissNewUser = () => setIsNewUser(false);
 
   // On mount, try to restore session from localStorage
   useEffect(() => {
@@ -62,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
     setUser(data.user);
+    setIsNewUser(true);
   };
 
   const logout = async () => {
@@ -77,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, isNewUser, dismissNewUser, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
