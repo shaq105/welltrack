@@ -145,9 +145,9 @@
 - [x] Lazy-load chart components so the Dashboard loads fast
 
 ### Deployment
-- [ ] Set up backend deployment on Railway or Render (add `start` script, configure env vars)
-- [ ] Set up frontend deployment on Vercel (configure build command and env vars)
-- [ ] Ensure HTTPS is enforced end-to-end
+- [x] Set up backend deployment on Railway or Render (add `start` script, configure env vars)
+- [x] Set up frontend deployment on Vercel (configure build command and env vars)
+- [x] Ensure HTTPS is enforced end-to-end
 - [ ] Run `prisma migrate deploy` against the production database
 - [ ] Smoke test all critical flows in production before inviting beta users
 
