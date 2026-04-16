@@ -135,9 +135,9 @@
 - [ ] Manually test all log modals on mobile screen sizes
 
 ### Mobile Responsiveness
-- [ ] Audit all pages on small screens (375px wide) and fix layout issues
-- [ ] Ensure tap targets are large enough (min 44x44px) for users with motor difficulties
-- [ ] Test and fix any overflow or scroll issues on the Dashboard and History pages
+- [x] Audit all pages on small screens (375px wide) and fix layout issues
+- [x] Ensure tap targets are large enough (min 44x44px) for users with motor difficulties
+- [x] Test and fix any overflow or scroll issues on the Dashboard and History pages
 
 ### Performance
 - [ ] Confirm database indexes exist on `(user_id, logged_at)` for all log tables

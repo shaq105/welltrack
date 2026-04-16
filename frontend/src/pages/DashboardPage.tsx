@@ -245,7 +245,7 @@ export default function DashboardPage() {
               </>
             )}
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-1 sm:gap-2">
             {weekDays.map((day) => {
               const logged = daysLoggedThisWeek.some((d) => isSameDay(d, day));
               const isToday = isSameDay(day, today);
@@ -257,7 +257,7 @@ export default function DashboardPage() {
                     {getDayLabel(day)}
                   </span>
                   <div
-                    className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold transition ${
+                    className={`flex h-11 w-11 items-center justify-center rounded-full text-xs font-bold transition ${
                       logged
                         ? 'bg-teal-600 text-white'
                         : isToday
@@ -279,7 +279,7 @@ export default function DashboardPage() {
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-sage-600">
           Quick Add
         </h2>
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
           {quickAddButtons.map(({ label, type, color }) => (
             <button
               key={type}

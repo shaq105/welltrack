@@ -412,7 +412,7 @@ export default function TrendsPage() {
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold text-teal-800">Trends</h1>
 
         {/* Range picker */}
@@ -421,7 +421,7 @@ export default function TrendsPage() {
             <button
               key={value}
               onClick={() => setRange(value)}
-              className={`rounded-lg px-4 py-1.5 text-sm font-medium transition ${
+              className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition sm:flex-none ${
                 range === value
                   ? 'bg-teal-600 text-white shadow-sm'
                   : 'text-sage-600 hover:bg-sage-100'

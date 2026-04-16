@@ -66,7 +66,7 @@ function ScoreRow({
             key={n}
             type="button"
             onClick={() => onChange(optional && value === n ? null : n)}
-            className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${
+            className={`flex-1 rounded-lg py-3 text-sm font-medium transition ${
               value === n
                 ? 'bg-teal-600 text-white'
                 : 'border border-sage-300 text-sage-700 hover:bg-sage-100'
