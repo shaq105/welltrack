@@ -412,7 +412,7 @@ export default function SettingsPage() {
           <button
             key={id}
             onClick={() => setActiveSection(id)}
-            className={`rounded-t-md px-4 py-2 text-sm font-medium transition ${
+            className={`rounded-t-md px-4 py-3 text-sm font-medium transition ${
               activeSection === id
                 ? 'border-b-2 border-teal-600 text-teal-700'
                 : 'text-sage-600 hover:text-sage-800'
@@ -512,7 +512,7 @@ export default function SettingsPage() {
                         {symptom.userId !== null && (
                           <button
                             onClick={() => handleDeleteSymptom(symptom.id)}
-                            className="text-xs text-red-500 transition hover:text-red-700"
+                            className="rounded px-3 py-2 text-sm text-red-500 transition hover:bg-red-50 hover:text-red-700"
                           >
                             Delete
                           </button>
@@ -623,7 +623,7 @@ export default function SettingsPage() {
                         {habit.userId !== null && (
                           <button
                             onClick={() => handleDeleteHabit(habit.id)}
-                            className="text-xs text-red-500 transition hover:text-red-700"
+                            className="rounded px-3 py-2 text-sm text-red-500 transition hover:bg-red-50 hover:text-red-700"
                           >
                             Delete
                           </button>
@@ -747,16 +747,16 @@ export default function SettingsPage() {
                           </p>
                         )}
                       </div>
-                      <div className="flex shrink-0 items-center gap-1">
+                      <div className="flex shrink-0 items-center gap-2">
                         <button
                           onClick={() => openEditMed(med)}
-                          className="rounded px-2 py-1 text-xs text-teal-600 transition hover:bg-teal-50"
+                          className="rounded px-3 py-2 text-sm text-teal-600 transition hover:bg-teal-50"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleToggleMed(med)}
-                          className={`rounded px-2 py-1 text-xs transition ${
+                          className={`rounded px-3 py-2 text-sm transition ${
                             med.isActive
                               ? 'text-amber-600 hover:bg-amber-50'
                               : 'text-teal-600 hover:bg-teal-50'
@@ -766,7 +766,7 @@ export default function SettingsPage() {
                         </button>
                         <button
                           onClick={() => handleDeleteMed(med.id)}
-                          className="rounded px-2 py-1 text-xs text-red-500 transition hover:bg-red-50"
+                          className="rounded px-3 py-2 text-sm text-red-500 transition hover:bg-red-50"
                         >
                           Delete
                         </button>

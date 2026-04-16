@@ -194,7 +194,7 @@ function EntryCard({ entry, onEdit }: { entry: LogEntry; onEdit: (e: LogEntry) =
   return (
     <button
       onClick={() => onEdit(entry)}
-      className="w-full rounded-lg border border-sage-200 bg-white p-3 text-left transition hover:border-teal-300 hover:bg-teal-50/30"
+      className="w-full rounded-lg border border-sage-200 bg-white p-4 text-left transition hover:border-teal-300 hover:bg-teal-50/30"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
@@ -329,7 +329,7 @@ export default function HistoryPage() {
           <button
             key={value}
             onClick={() => setFilter(value)}
-            className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition ${
+            className={`shrink-0 rounded-lg px-4 py-3 text-sm font-medium transition ${
               filter === value
                 ? 'bg-teal-600 text-white shadow-sm'
                 : 'text-sage-600 hover:bg-sage-100'
