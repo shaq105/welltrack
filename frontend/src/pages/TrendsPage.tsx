@@ -1,7 +1,9 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import apiClient from '../lib/apiClient';
 import type { SymptomLog, MoodLog, MedicationLog, HabitLog } from '../types/api';
-import TrendLineChart, { type DataPoint, type SeriesConfig } from '../components/charts/TrendLineChart';
+import type { DataPoint, SeriesConfig } from '../components/charts/TrendLineChart';
+
+const TrendLineChart = lazy(() => import('../components/charts/TrendLineChart'));
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -312,6 +314,14 @@ function CalendarHeatmap({
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+function ChartSkeleton() {
+  return (
+    <div className="flex h-65 items-center justify-center">
+      <div className="h-6 w-6 animate-spin rounded-full border-4 border-teal-200 border-t-teal-600" />
+    </div>
+  );
+}
+
 function ChartSection({
   title,
   children,
@@ -445,12 +455,14 @@ export default function TrendsPage() {
             isEmpty={symptomLogs.length === 0}
             emptyMessage="No symptom data in this period. Log symptoms to see trends."
           >
-            <TrendLineChart
-              data={symptomData}
-              series={symptomSeries}
-              yDomain={[0, 10]}
-              yTicks={[0, 2, 4, 6, 8, 10]}
-            />
+            <Suspense fallback={<ChartSkeleton />}>
+              <TrendLineChart
+                data={symptomData}
+                series={symptomSeries}
+                yDomain={[0, 10]}
+                yTicks={[0, 2, 4, 6, 8, 10]}
+              />
+            </Suspense>
           </ChartSection>
 
           {/* Mood / energy / stress chart */}
@@ -459,12 +471,14 @@ export default function TrendsPage() {
             isEmpty={moodLogs.length === 0}
             emptyMessage="No mood data in this period. Log your mood to see trends."
           >
-            <TrendLineChart
-              data={moodData}
-              series={moodSeries}
-              yDomain={[0, 5]}
-              yTicks={[0, 1, 2, 3, 4, 5]}
-            />
+            <Suspense fallback={<ChartSkeleton />}>
+              <TrendLineChart
+                data={moodData}
+                series={moodSeries}
+                yDomain={[0, 5]}
+                yTicks={[0, 1, 2, 3, 4, 5]}
+              />
+            </Suspense>
           </ChartSection>
 
           {/* Activity heatmap */}
