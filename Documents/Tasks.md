@@ -130,8 +130,8 @@
 ## Phase 4: Polish & Launch (Weeks 10–12)
 
 ### Testing
-- [ ] Write integration tests for all auth endpoints (register, login, refresh, logout)
-- [ ] Write integration tests for at least one full CRUD flow (e.g., symptom logs)
+- [x] Write integration tests for all auth endpoints (register, login, refresh, logout)
+- [x] Write integration tests for at least one full CRUD flow (e.g., symptom logs)
 - [ ] Manually test all log modals on mobile screen sizes
 
 ### Mobile Responsiveness
