@@ -1,4 +1,6 @@
 import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import symptomRoutes from './routes/symptom.routes';
@@ -12,6 +14,31 @@ import exportRoutes from './routes/export.routes';
 import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
+
+// Trust reverse proxy (Render, Railway) so Express sees the real client IP and protocol
+app.set('trust proxy', 1);
+
+// Security headers including HSTS (enforces HTTPS in browsers)
+app.use(
+  helmet({
+    hsts: {
+      maxAge: 31536000, // 1 year
+      includeSubDomains: true,
+      preload: true,
+    },
+  }),
+);
+
+// CORS — allow only the configured frontend origin
+const corsOrigin = process.env.CORS_ORIGIN ?? 'http://localhost:5173';
+app.use(
+  cors({
+    origin: corsOrigin,
+    credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+);
 
 app.use(express.json());
 
