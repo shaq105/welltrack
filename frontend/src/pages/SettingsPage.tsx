@@ -4,7 +4,7 @@ import apiClient from '../lib/apiClient';
 import { useAuth } from '../context/AuthContext';
 import type { Symptom, Habit, Medication } from '../types/api';
 
-type Section = 'profile' | 'symptoms' | 'habits' | 'medications' | 'data' | 'account';
+type Section = 'profile' | 'symptoms' | 'habits' | 'medications' | 'data' | 'notifications' | 'account';
 
 const TIMEZONES = [
   'UTC',
@@ -32,6 +32,7 @@ const SECTIONS: { id: Section; label: string }[] = [
   { id: 'symptoms', label: 'Symptoms' },
   { id: 'habits', label: 'Habits' },
   { id: 'medications', label: 'Medications' },
+  { id: 'notifications', label: 'Notifications' },
   { id: 'data', label: 'Data' },
   { id: 'account', label: 'Account' },
 ];
@@ -72,6 +73,25 @@ export default function SettingsPage() {
       setTimezone(user.timezone ?? 'UTC');
     }
   }, [user]);
+
+  // Load reminder preferences from the API when entering notifications section
+  useEffect(() => {
+    if (activeSection !== 'notifications') return;
+    apiClient
+      .get<{ user: { reminderEnabled: boolean; reminderTime: string } }>('/api/users/me')
+      .then(({ data }) => {
+        setReminderEnabled(data.user.reminderEnabled ?? false);
+        setReminderTime(data.user.reminderTime ?? '08:00');
+      })
+      .catch(() => {});
+  }, [activeSection]);
+
+  // ---- Notifications state ----
+  const [reminderEnabled, setReminderEnabled] = useState(false);
+  const [reminderTime, setReminderTime] = useState('08:00');
+  const [reminderSaving, setReminderSaving] = useState(false);
+  const [reminderError, setReminderError] = useState('');
+  const [reminderSuccess, setReminderSuccess] = useState('');
 
   // ---- Symptoms state ----
   const [symptoms, setSymptoms] = useState<Symptom[]>([]);
@@ -175,6 +195,23 @@ export default function SettingsPage() {
       setProfileError(apiError.response?.data?.message ?? 'Failed to save profile.');
     } finally {
       setProfileSaving(false);
+    }
+  };
+
+  // ---- Notification handlers ----
+
+  const handleReminderSave = async () => {
+    setReminderSaving(true);
+    setReminderError('');
+    setReminderSuccess('');
+    try {
+      await apiClient.patch('/api/users/me', { reminderEnabled, reminderTime });
+      setReminderSuccess('Notification preferences saved.');
+    } catch (err: unknown) {
+      const apiError = err as { response?: { data?: { message?: string } } };
+      setReminderError(apiError.response?.data?.message ?? 'Failed to save preferences.');
+    } finally {
+      setReminderSaving(false);
     }
   };
 
@@ -382,7 +419,7 @@ export default function SettingsPage() {
     }
   };
 
-  // ---- Data export handler ----
+  // ---- Data export handlers ----
 
   const handleExportCsv = async () => {
     try {
@@ -397,6 +434,22 @@ export default function SettingsPage() {
       window.URL.revokeObjectURL(url);
     } catch {
       alert('Export failed. The export feature may not be available yet.');
+    }
+  };
+
+  const handleExportPdf = async () => {
+    try {
+      const response = await apiClient.get('/api/export/pdf', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(response.data as Blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'welltrack-health-report.pdf');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      alert('PDF export failed. Please try again.');
     }
   };
 
@@ -786,20 +839,88 @@ export default function SettingsPage() {
         </div>
       )}
 
+      {/* Notifications Section */}
+      {activeSection === 'notifications' && (
+        <div className="rounded-xl border border-sage-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-bold text-teal-800">Notifications</h2>
+          {reminderError && (
+            <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+              {reminderError}
+            </div>
+          )}
+          {reminderSuccess && (
+            <div className="mb-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">
+              {reminderSuccess}
+            </div>
+          )}
+          <div className="max-w-md space-y-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium text-sage-800">Daily reminder email</p>
+                <p className="text-xs text-sage-500">
+                  Receive an email reminder if you haven&apos;t logged anything by the chosen time.
+                </p>
+              </div>
+              <ToggleSwitch
+                checked={reminderEnabled}
+                onChange={() => setReminderEnabled((v) => !v)}
+              />
+            </div>
+            {reminderEnabled && (
+              <div>
+                <label className="mb-1 block text-sm font-medium text-sage-700">
+                  Reminder time (UTC)
+                </label>
+                <input
+                  type="time"
+                  value={reminderTime}
+                  onChange={(e) => setReminderTime(e.target.value)}
+                  className="rounded-lg border border-sage-300 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200"
+                />
+              </div>
+            )}
+            <button
+              onClick={handleReminderSave}
+              disabled={reminderSaving}
+              className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:opacity-60"
+            >
+              {reminderSaving ? 'Saving…' : 'Save Preferences'}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Data Section */}
       {activeSection === 'data' && (
         <div className="rounded-xl border border-sage-200 bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-lg font-bold text-teal-800">Data</h2>
-          <p className="mb-4 text-sm text-sage-600">
-            Export all your health logs as a CSV file for use in spreadsheets or sharing with your
-            healthcare provider.
-          </p>
-          <button
-            onClick={handleExportCsv}
-            className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-700"
-          >
-            Export as CSV
-          </button>
+          <div className="space-y-6">
+            <div>
+              <p className="mb-1 text-sm font-medium text-sage-800">CSV Export</p>
+              <p className="mb-3 text-sm text-sage-600">
+                Download all your health logs as a CSV spreadsheet.
+              </p>
+              <button
+                onClick={handleExportCsv}
+                className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-700"
+              >
+                Export as CSV
+              </button>
+            </div>
+            <div className="border-t border-sage-100 pt-6">
+              <p className="mb-1 text-sm font-medium text-sage-800">PDF Report for Doctor Visits</p>
+              <p className="mb-3 text-sm text-sage-600">
+                Generate a formatted PDF report of your health logs, ready to share with your
+                healthcare provider.
+              </p>
+              <button
+                onClick={handleExportPdf}
+                className="rounded-lg border border-teal-600 px-4 py-2 text-sm font-semibold text-teal-700 transition hover:bg-teal-50"
+              >
+                Download PDF Report
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

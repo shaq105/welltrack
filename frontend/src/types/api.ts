@@ -66,3 +66,22 @@ export interface HabitLog {
   loggedAt: string;
   habit?: Pick<Habit, 'name' | 'trackingType' | 'unit'>;
 }
+
+export interface Correlation {
+  habitName: string;
+  outcomeType: 'mood' | 'energy' | 'stress' | 'symptom';
+  outcomeName: string;
+  withHabit: number;
+  withoutHabit: number;
+  difference: number;
+  direction: 'positive' | 'negative';
+  sampleSize: number;
+  description: string;
+}
+
+export interface CorrelationMeta {
+  daysAnalyzed: number;
+  habitsTracked: number;
+  hasEnoughData: boolean;
+  message: string | null;
+}

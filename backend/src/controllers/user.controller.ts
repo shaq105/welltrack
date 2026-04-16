@@ -7,7 +7,7 @@ export async function getMe(req: Request, res: Response, next: NextFunction): Pr
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, displayName: true, timezone: true },
+      select: { id: true, email: true, displayName: true, timezone: true, reminderEnabled: true, reminderTime: true },
     });
 
     if (!user) {
@@ -24,7 +24,7 @@ export async function getMe(req: Request, res: Response, next: NextFunction): Pr
 export async function updateMe(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const userId = req.user!.id;
-    const { displayName, timezone } = req.body;
+    const { displayName, timezone, reminderEnabled, reminderTime } = req.body;
 
     if (displayName !== undefined && typeof displayName !== 'string') {
       res.status(400).json({ error: 'Bad Request', message: 'displayName must be a string' });
@@ -36,19 +36,26 @@ export async function updateMe(req: Request, res: Response, next: NextFunction):
       return;
     }
 
-    if (displayName === undefined && timezone === undefined) {
-      res.status(400).json({ error: 'Bad Request', message: 'At least one of displayName or timezone is required' });
+    if (
+      displayName === undefined &&
+      timezone === undefined &&
+      reminderEnabled === undefined &&
+      reminderTime === undefined
+    ) {
+      res.status(400).json({ error: 'Bad Request', message: 'At least one field is required' });
       return;
     }
 
-    const data: { displayName?: string; timezone?: string } = {};
+    const data: { displayName?: string; timezone?: string; reminderEnabled?: boolean; reminderTime?: string } = {};
     if (displayName !== undefined) data.displayName = displayName;
     if (timezone !== undefined) data.timezone = timezone;
+    if (reminderEnabled !== undefined) data.reminderEnabled = reminderEnabled;
+    if (reminderTime !== undefined) data.reminderTime = reminderTime;
 
     const user = await prisma.user.update({
       where: { id: userId },
       data,
-      select: { id: true, email: true, displayName: true, timezone: true },
+      select: { id: true, email: true, displayName: true, timezone: true, reminderEnabled: true, reminderTime: true },
     });
 
     res.status(200).json({ user });

@@ -9,6 +9,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import HistoryPage from './pages/HistoryPage';
 import TrendsPage from './pages/TrendsPage';
+import InsightsPage from './pages/InsightsPage';
 import SettingsPage from './pages/SettingsPage';
 
 export default function App() {
@@ -49,6 +50,16 @@ export default function App() {
               <ProtectedRoute>
                 <Layout>
                   <TrendsPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/insights"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <InsightsPage />
                 </Layout>
               </ProtectedRoute>
             }

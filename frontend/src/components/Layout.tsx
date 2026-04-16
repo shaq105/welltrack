@@ -6,6 +6,7 @@ const navLinks = [
   { to: '/', label: 'Dashboard', exact: true },
   { to: '/history', label: 'History', exact: false },
   { to: '/trends', label: 'Trends', exact: false },
+  { to: '/insights', label: 'Insights', exact: false },
   { to: '/settings', label: 'Settings', exact: false },
 ];
 
