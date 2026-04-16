@@ -140,9 +140,9 @@
 - [x] Test and fix any overflow or scroll issues on the Dashboard and History pages
 
 ### Performance
-- [ ] Confirm database indexes exist on `(user_id, logged_at)` for all log tables
-- [ ] Add pagination or virtual scrolling to the History page if entry count is large
-- [ ] Lazy-load chart components so the Dashboard loads fast
+- [x] Confirm database indexes exist on `(user_id, logged_at)` for all log tables
+- [x] Add pagination or virtual scrolling to the History page if entry count is large
+- [x] Lazy-load chart components so the Dashboard loads fast
 
 ### Deployment
 - [ ] Set up backend deployment on Railway or Render (add `start` script, configure env vars)

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import apiClient from '../lib/apiClient';
 import type { SymptomLog, MoodLog, MedicationLog, HabitLog } from '../types/api';
 import SymptomLogModal from '../components/modals/SymptomLogModal';
@@ -230,20 +230,26 @@ export default function HistoryPage() {
   const [medicationLogs, setMedicationLogs] = useState<MedicationLog[]>([]);
   const [habitLogs, setHabitLogs] = useState<HabitLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [daysBack, setDaysBack] = useState(30);
   const [editState, setEditState] = useState<LogEntry | null>(null);
+  // Tracks whether the next loadLogs call is a "load more" (extend range) action
+  const isLoadMoreRef = useRef(false);
 
-  // Last 30 days — computed once
   const dateRange = useMemo(() => {
     const end = new Date();
     end.setHours(23, 59, 59, 999);
     const start = new Date();
-    start.setDate(start.getDate() - 29);
+    start.setDate(start.getDate() - (daysBack - 1));
     start.setHours(0, 0, 0, 0);
     return { startDate: start.toISOString(), endDate: end.toISOString() };
-  }, []);
+  }, [daysBack]);
 
   const loadLogs = useCallback(async () => {
-    setIsLoading(true);
+    const isMore = isLoadMoreRef.current;
+    isLoadMoreRef.current = false;
+    if (isMore) setIsLoadingMore(true);
+    else setIsLoading(true);
     try {
       const { startDate, endDate } = dateRange;
       const [s, m, med, h] = await Promise.all([
@@ -267,9 +273,15 @@ export default function HistoryPage() {
     } catch {
       // fail silently — data stays at empty arrays
     } finally {
-      setIsLoading(false);
+      if (isMore) setIsLoadingMore(false);
+      else setIsLoading(false);
     }
   }, [dateRange]);
+
+  const handleLoadMore = useCallback(() => {
+    isLoadMoreRef.current = true;
+    setDaysBack((prev) => prev + 30);
+  }, []);
 
   useEffect(() => {
     loadLogs();
@@ -316,7 +328,7 @@ export default function HistoryPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-teal-800">History</h1>
-          <p className="mt-1 text-sm text-sage-600">Last 30 days</p>
+          <p className="mt-1 text-sm text-sage-600">Last {daysBack} days</p>
         </div>
         {!isLoading && (
           <span className="text-sm text-sage-500">{totalCount} entries</span>
@@ -364,6 +376,24 @@ export default function HistoryPage() {
               </div>
             </section>
           ))}
+
+          {/* Load More */}
+          <div className="flex justify-center pb-4">
+            <button
+              onClick={handleLoadMore}
+              disabled={isLoadingMore}
+              className="flex items-center gap-2 rounded-lg border border-sage-200 bg-white px-5 py-2.5 text-sm font-medium text-sage-600 shadow-sm transition hover:border-teal-300 hover:bg-teal-50 hover:text-teal-700 disabled:opacity-60"
+            >
+              {isLoadingMore ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-teal-200 border-t-teal-600" />
+                  Loading…
+                </>
+              ) : (
+                `Load 30 more days`
+              )}
+            </button>
+          </div>
         </div>
       )}
 
