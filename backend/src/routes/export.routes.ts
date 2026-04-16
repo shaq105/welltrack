@@ -10,7 +10,7 @@ const exportLimiter = rateLimit({
   max: 100, // limit each IP to 100 requests per window
 });
 
-router.get('/csv', authenticate, exportLimiter, exportCsv);
-router.get('/pdf', authenticate, exportLimiter, exportPdf);
+router.get('/csv', exportLimiter, authenticate, exportCsv);
+router.get('/pdf', exportLimiter, authenticate, exportPdf);
 
 export default router;
